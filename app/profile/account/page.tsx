@@ -1,5 +1,4 @@
 import AccountInfo from "@/components/AccountInfo";
-import ProfileSidebar from "@/components/ProfileSidebar";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";

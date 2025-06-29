@@ -2,7 +2,6 @@
 
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import ReactMarkdown from "react-markdown";
 
 // Dynamically import MDEditor to avoid SSR issues
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
