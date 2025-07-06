@@ -10,7 +10,9 @@ import Link from "next/link";
 import { Separator } from "./ui/separator";
 import { signOut } from "next-auth/react";
 
-export default function AccountInfo({ user }: { user: AuthUser }) {
+export default function AccountInfo({ user }: { user?: AuthUser }) {
+  if (!user) return <h1>User Info Not Found!</h1>;
+
   return (
     <div className='flex flex-col lg:flex-row w-full gap-4 p-10'>
       <Card className='py-6'>

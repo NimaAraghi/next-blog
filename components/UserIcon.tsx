@@ -1,7 +1,7 @@
 "use client";
 
 import { AuthUser } from "@/types/UserAuth";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import {
@@ -16,6 +16,12 @@ import { signOut } from "next-auth/react";
 import { UserCircle } from "lucide-react";
 
 export default function UserIcon({ user }: { user: AuthUser | null }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   if (!user) {
     return (
       <div className='flex itmes-center gap-3.5'>

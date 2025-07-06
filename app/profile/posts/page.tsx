@@ -5,9 +5,10 @@ import { getServerSession } from "next-auth";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { authOptions } from "@/lib/auth";
 
 export default async function Posts() {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   const posts = await prisma.post.findMany({
     where: { authorId: session?.user.id },
     orderBy: { createdAt: "desc" },

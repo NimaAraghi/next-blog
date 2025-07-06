@@ -3,6 +3,26 @@
 
 @custom-variant dark (&:is(.dark *));
 
+.post-content h1 {
+  @apply text-3xl font-bold mt-6 mb-2;
+}
+
+.post-content h2 {
+  @apply text-2xl font-semibold mt-4 mb-2;
+}
+
+.post-content p {
+  @apply mb-4;
+}
+
+.post-content ul {
+  @apply list-disc ml-6 mb-4;
+}
+
+.post-content pre {
+  @apply bg-gray-100 p-4 rounded;
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
