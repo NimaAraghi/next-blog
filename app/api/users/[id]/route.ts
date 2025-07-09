@@ -46,8 +46,6 @@ export async function PUT(
 
     return NextResponse.json({ updatedUser }, { status: 200 });
   } catch (error) {
-    if (error.code === "P2025")
-      return NextResponse.json({ error: "User Not found" }, { status: 404 });
     return NextResponse.json({ error }, { status: 500 });
   }
 }
@@ -72,8 +70,6 @@ export async function DELETE(
 
     return NextResponse.json({ deletedUser }, { status: 200 });
   } catch (error) {
-    if (error.code === "P2025")
-      return NextResponse.json({ error: "User Not found" }, { status: 404 });
     return NextResponse.json({ error }, { status: 500 });
   }
 }
