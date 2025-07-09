@@ -34,7 +34,7 @@ export function RegisterForm({
   const router = useRouter();
 
   async function onSubmit(data: RegisterFormData) {
-    const res = await fetch("/api/users/create", {
+    const res = await fetch("/api/users", {
       method: "POST",
       body: JSON.stringify(data),
       headers: { "Content-Type": "application/json" },

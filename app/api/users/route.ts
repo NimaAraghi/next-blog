@@ -18,23 +18,33 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const { name, email, password } = await req.json();
+  try {
+    const { name, email, password } = await req.json();
 
-  if (!email || !password || !name)
-    return NextResponse.json({ error: "Missing Fields" }, { status: 400 });
+    if (!email || !password || !name)
+      return NextResponse.json({ error: "Missing Fields" }, { status: 400 });
 
-  const existingUser = await prisma.user.findUnique({ where: { email } });
-  if (existingUser)
-    return NextResponse.json({ error: "User Already Exists" }, { status: 400 });
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser)
+      return NextResponse.json(
+        { error: "User Already Exists" },
+        { status: 400 }
+      );
 
-  const hashedPassword = await hash(password, 10);
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-      password: hashedPassword,
-    },
-  });
+    const hashedPassword = await hash(password, 10);
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+      },
+    });
 
-  return NextResponse.json({ message: "User Created", user }, { status: 201 });
+    return NextResponse.json(
+      { message: "User Created", user },
+      { status: 201 }
+    );
+  } catch (error) {
+    return NextResponse.json("Internal Server Error", { status: 500 });
+  }
 }

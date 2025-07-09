@@ -45,17 +45,19 @@ export default function UserIcon({ user }: { user: AuthUser | null }) {
           {user.name}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem className='cursor-pointer' asChild>
           <Link href='/profile/account'>Profile</Link>
         </DropdownMenuItem>
         {user.role === "ADMIN" && (
-          <DropdownMenuItem>
+          <DropdownMenuItem className='cursor-pointer' asChild>
             <Link href='/admin/dashboard'>Dashboard</Link>
           </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <button onClick={() => signOut()}>Sign out</button>
+        <DropdownMenuItem className='cursor-pointer' asChild>
+          <button className='w-full' onClick={() => signOut()}>
+            Sign out
+          </button>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

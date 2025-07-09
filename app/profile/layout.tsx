@@ -7,7 +7,7 @@ export default function ProfileLayout({
 }) {
   return (
     <div className='flex flex-col w-full md:flex-row'>
-      <div className='w-full h-auto md:w-48 md:min-h-screen border-0 md:border-r-2 border-l-foreground'>
+      <div className='w-full h-auto sticky left-0 md:w-48 md:min-h-screen border-0 md:border-r-2 border-l-foreground'>
         <ProfileSidebar />
       </div>
       {children}
