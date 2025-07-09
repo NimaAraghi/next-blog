@@ -139,7 +139,7 @@ export default function PostForm({
               variant='destructive'
               onClick={() => {
                 setPreviewImage("");
-                setValue("coverImage", "" as any, { shouldValidate: true });
+                setValue("coverImage", "", { shouldValidate: true });
               }}
             >
               Remove

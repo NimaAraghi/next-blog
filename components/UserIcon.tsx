@@ -22,6 +22,10 @@ export default function UserIcon({ user }: { user: AuthUser | null }) {
     setMounted(true);
   }, []);
 
+  if (!mounted) {
+    return null; // Prevents hydration mismatch
+  }
+
   if (!user) {
     return (
       <div className='flex itmes-center gap-3.5'>

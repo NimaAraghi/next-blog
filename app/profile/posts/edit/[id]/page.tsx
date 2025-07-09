@@ -1,8 +1,6 @@
 import PostForm from "@/components/PostForm";
-import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PostFormData } from "@/lib/validations/post";
-import { getServerSession } from "next-auth";
 
 export default async function Edit({
   params,

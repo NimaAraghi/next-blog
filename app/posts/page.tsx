@@ -15,7 +15,10 @@ export default async function Posts() {
   return (
     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full md:w-2/3 py-10'>
       {posts.map((post) => (
-        <Card className='overflow-hidden transition-shadow hover:shadow-md'>
+        <Card
+          key={post.id}
+          className='overflow-hidden transition-shadow hover:shadow-md'
+        >
           <CardHeader className='pb-2'>
             {post.coverImage && (
               <Link href={`/posts/${post.slug}`}>
