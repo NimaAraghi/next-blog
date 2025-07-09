@@ -10,13 +10,14 @@ cloudinary.config({
 export async function uploadImageToCloudinary(
   buffer: Buffer,
   filename: string
-) {
+): Promise<{ secure_url: string }> {
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       { folder: "posts", public_id: filename.split(".")[0] },
       (error, result) => {
-        if (error) return reject(error);
-        resolve(result);
+        if (error || !result)
+          return reject(error ?? new Error("No result from Cloudinary"));
+        resolve({ secure_url: result.secure_url });
       }
     );
 
