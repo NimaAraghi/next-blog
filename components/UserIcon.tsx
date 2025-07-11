@@ -1,6 +1,5 @@
 "use client";
 
-import { AuthUser } from "@/types/UserAuth";
 import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import Link from "next/link";
@@ -12,21 +11,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { UserCircle } from "lucide-react";
 
-export default function UserIcon({ user }: { user: AuthUser | null }) {
-  const [mounted, setMounted] = useState(false);
+export default function UserIcon() {
+  const { data: session, status } = useSession();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  if (status === "loading") return null;
 
-  if (!mounted) {
-    return null; // Prevents hydration mismatch
-  }
-
-  if (!user) {
+  if (!session?.user) {
     return (
       <div className='flex itmes-center gap-3.5'>
         <Button asChild variant='outline'>
@@ -46,13 +39,13 @@ export default function UserIcon({ user }: { user: AuthUser | null }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end' sideOffset={5}>
         <DropdownMenuLabel className='text-center font-bold text-lg'>
-          {user.name}
+          {session.user.name}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem className='cursor-pointer' asChild>
           <Link href='/profile/account'>Profile</Link>
         </DropdownMenuItem>
-        {user.role === "ADMIN" && (
+        {session.user.role === "ADMIN" && (
           <DropdownMenuItem className='cursor-pointer' asChild>
             <Link href='/admin/dashboard'>Dashboard</Link>
           </DropdownMenuItem>
