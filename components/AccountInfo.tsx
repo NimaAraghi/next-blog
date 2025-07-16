@@ -1,43 +1,63 @@
 "use client";
 
 import { formatter } from "@/lib/utils";
-import { AuthUser } from "@/types/UserAuth";
 import { ImagePlus } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { ProfileData, profileSchema } from "@/schema/userForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./ui/input";
 import { toast } from "sonner";
+import Spinner from "./Spinner";
 
-export default function AccountInfo({ user }: { user?: AuthUser }) {
+export default function AccountInfo() {
+  const { data: session, status, update } = useSession();
+
   const {
     register,
     handleSubmit,
     setValue,
-    formState: { errors, isValid, isSubmitting },
+    formState: { errors, isSubmitting },
   } = useForm<ProfileData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: user?.name || "",
-      email: user?.email || "",
+      name: "",
+      email: "",
     },
     mode: "onChange",
   });
 
-  const [previewImage, setPreviewImage] = useState(user?.image || "");
+  const [previewImage, setPreviewImage] = useState("");
+
+  useEffect(() => {
+    if (session?.user) {
+      setValue("name", session.user.name || "");
+      setValue("email", session.user.email || "");
+      setPreviewImage(session.user.image || "");
+    }
+  }, [session]);
+
+  console.log(session);
+
+  if (status === "loading") {
+    return <Spinner />;
+  }
+
+  if (status === "unauthenticated" || !session?.user) {
+    return <h1>User Info Not Found!</h1>;
+  }
 
   async function handleFormSubmit(data: ProfileData) {
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("email", data.email);
 
-    if (data.avatar instanceof File) {
+    if (data.avatar instanceof File && data.avatar.size > 0) {
       formData.append("avatar", data.avatar);
     }
 
@@ -48,7 +68,7 @@ export default function AccountInfo({ user }: { user?: AuthUser }) {
 
     console.log(data);
 
-    const res = await fetch(`/api/users/${user?.id}`, {
+    const res = await fetch(`/api/users/${session?.user.id}`, {
       method: "PUT",
       body: formData,
     });
@@ -58,10 +78,20 @@ export default function AccountInfo({ user }: { user?: AuthUser }) {
       toast.error(result.error || "Update failed");
     } else {
       toast.success("Profile updated successfully");
+      update({
+        ...session,
+        user: {
+          ...session?.user,
+          name: data.name,
+          email: data.email,
+          image:
+            data.avatar instanceof File
+              ? URL.createObjectURL(data.avatar)
+              : session?.user.image,
+        },
+      });
     }
   }
-
-  if (!user) return <h1>User Info Not Found!</h1>;
 
   return (
     <form
@@ -97,8 +127,11 @@ export default function AccountInfo({ user }: { user?: AuthUser }) {
               />
             </label>
             <div className='text-center'>
-              <p>{user.name}</p>
-              <p>You joined at {formatter.format(new Date(user.createdAt))}</p>
+              <p>{session.user.name}</p>
+              <p>
+                You joined at{" "}
+                {formatter.format(new Date(session.user.createdAt))}
+              </p>
             </div>
             <Button
               className='w-full'
@@ -171,7 +204,6 @@ export default function AccountInfo({ user }: { user?: AuthUser }) {
       <Button type='submit' variant='default' disabled={isSubmitting}>
         Submit
       </Button>
-      {!isValid && <p className='text-red-600'>Form has valdiation errors</p>}
     </form>
   );
 }

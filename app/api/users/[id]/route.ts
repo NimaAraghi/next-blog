@@ -33,7 +33,7 @@ export const PUT = withAuth(async (req, { id }) => {
 
     const name = formData.get("name")?.toString() || "";
     const email = formData.get("email")?.toString() || "";
-    const avatar = formData.get("avatar");
+    const avatar = formData.get("avatar") || "";
     const password = formData.get("password")?.toString() || "";
     const newPassword = formData.get("newPassword")?.toString() || "";
     const confirmPassword = formData.get("confirmPassword")?.toString() || "";
