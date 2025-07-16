@@ -1,23 +1,36 @@
+// lib/api/utils.ts
 import { getServerSession } from "next-auth";
+import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../auth";
-import { NextResponse } from "next/server";
-import { prisma } from "../prisma";
 
-async function athorizeAndGetId(id: string) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+type Handler = (req: NextRequest, params: { id: string }) => Promise<Response>;
 
-  if (session.user.role !== "ADMIN" && session.user.id !== id)
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+export function withAuth(handler: Handler) {
+  return async (
+    req: NextRequest,
+    { params }: { params: Promise<{ id: string }> }
+  ) => {
+    try {
+      const session = await getServerSession(authOptions);
+      const { id } = await params;
 
-  return { session, id };
-}
+      if (!session?.user) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
 
-async function getUserById(id: string) {
-  const user = await prisma.user.findUnique({ where: { id } });
-  if (!user)
-    return NextResponse.json({ error: "User Not Found" }, { status: 404 });
+      const isAdmin = session.user.role === "ADMIN";
+      const isOwner = session.user.id === id;
 
-  return user;
+      if (!isAdmin && !isOwner) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+
+      return handler(req, { id });
+    } catch (error) {
+      return NextResponse.json(
+        { error: (error as Error).message },
+        { status: 500 }
+      );
+    }
+  };
 }

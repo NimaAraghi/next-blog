@@ -4,7 +4,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PostFormData, postSchema } from "@/lib/validations/post";
+import { PostFormData, postSchema } from "@/schema/post";
 import { Button } from "@/components/ui/button";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import Image from "next/image";

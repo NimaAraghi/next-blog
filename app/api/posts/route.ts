@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
-  const uploadResult = await uploadImageToCloudinary(buffer, file.name);
+  const uploadResult = await uploadImageToCloudinary(buffer, file.name, "posts");
 
   const post = await prisma.post.create({
     data: {

@@ -1,6 +1,6 @@
 import PostForm from "@/components/PostForm";
 import { prisma } from "@/lib/prisma";
-import { PostFormData } from "@/lib/validations/post";
+import { PostFormData } from "@/schema/post";
 
 export default async function Edit({
   params,
